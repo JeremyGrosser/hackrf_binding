@@ -25,6 +25,10 @@ package HackRF is
       return Device;
    --  TODO: Support multiple devices
 
+   function Firmware_Version
+      (This : Device)
+      return String;
+
    procedure Set_Sample_Rate
       (This : Device;
        Rate : Hertz);

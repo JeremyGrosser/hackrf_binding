@@ -14,23 +14,21 @@ procedure Test is
    Count : Natural := 0;
    Limit : constant := 16_000_000;
 
-   Start    : constant Time := Clock;
-   Elapsed  : Duration := 0.0;
+   Start   : constant Time := Clock;
+   Elapsed : Duration := 0.0;
 
    procedure Callback
       (Samples : HackRF.Sample_Array)
    is
    begin
-      if Count < Limit then
-         Count := Count + Samples'Length;
-      elsif Elapsed = 0.0 then
-         Elapsed := To_Duration (Clock - Start);
-      end if;
+      Count := Count + Samples'Length;
+      Elapsed := To_Duration (Clock - Start);
    end Callback;
 
    MSamples_Per_Second : Float;
-   Dev      : HackRF.Device := HackRF.Open;
+   Dev : HackRF.Device := HackRF.Open;
 begin
+   Put_Line ("HackRF firmware version: " & Dev.Firmware_Version);
    Dev.Set_Sample_Rate (16.0e6);
    Dev.Set_RF_Gain (0);
    Dev.Set_LNA_Gain (8);
@@ -38,10 +36,9 @@ begin
    Dev.Set_Frequency (2.402e6);
    Dev.Start_Receive (Callback'Unrestricted_Access);
    loop
-      exit when Elapsed /= 0.0;
+      exit when Count >= Limit;
       delay 0.001;
    end loop;
-
    Dev.Stop_Receive;
    Dev.Close;
    HackRF.Destroy;

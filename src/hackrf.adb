@@ -152,6 +152,25 @@ package body HackRF is
       end if;
    end Destroy;
 
+   function Firmware_Version
+      (This : Device)
+      return String
+   is
+      Arr : aliased char_array := (1 .. 255 => nul);
+      Ptr : constant chars_ptr := To_Chars_Ptr (Arr'Unchecked_Access);
+      Err : hackrf_error;
+   begin
+      Err := hackrf_version_string_read
+         (device  => This.Dev,
+          version => Ptr,
+          length  => Interfaces.Unsigned_8 (Arr'Length));
+      if Err /= HACKRF_SUCCESS then
+         raise HackRF_Exception with Value (hackrf_error_name (Err));
+      end if;
+
+      return To_Ada (Arr);
+   end Firmware_Version;
+
 begin
    declare
       Err : hackrf_error;
