@@ -1,0 +1,7 @@
+name = "hackrf"
+description = "HackRF software defined radio binding"
+version = "0.1.0-dev"
+
+authors = ["Jeremy Grosser"]
+maintainers = ["Jeremy Grosser <jeremy@synack.me>"]
+maintainers-logins = ["JeremyGrosser"]
